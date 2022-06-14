@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service
+  template:
+    metadata:
+      labels:
+        app: service
+    spec:
+      containers:
+      - name: service-container
+        image: sample-app-argo-poc
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "300m"
+        ports:
+        - name: service
+          containerPort: 3000
+
+        readinessProbe:
+          httpGet:
+            path: /health_check
+            port: service
+          initialDelaySeconds: 10
